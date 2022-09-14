@@ -8,7 +8,7 @@
             <tree>
                 <field name="name" string="Patient Name"/>
                 <field name="ref"/>
-                <field name="age"/>
+                <field name="age" optional="hide"/>
                 <field name="gender"/>
             </tree>
         </field>
@@ -20,6 +20,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
                     <group>
                         <group>
                             <field name="name"/>
@@ -30,13 +31,14 @@
                         <group>
                             <field name="ref"/>
                             <field name="gender"/>
-                            <field name="active" invisible ="1"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
                 <!-- Chatter -->
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" groups ="base.group_user"/>
+                    <field name="message_follower_ids" groups="base.group_user"/>
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
                 </div>
@@ -56,16 +58,16 @@
                 <field name="gender"/>
                 <filter name="male_filter" string="Male" domain="[('gender','=','male')]"/>
                 <filter name="filter_female" string="Female" domain="[('gender','=','female')]"/>
-<!--                <separator/>-->
-<!--                <filter name="filter_kids" string="Kids" domain="[('age','&lt;=',5)]"/>-->
+                <!--                <separator/>-->
+                <!--                <filter name="filter_kids" string="Kids" domain="[('age','&lt;=',5)]"/>-->
                 <separator/>
                 <filter name="filter_active" string="Active" domain="[('active','=',False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Gender" name="group_by_gender" context="{'group_by':'gender'}"/>
                 </group>
                 <searchpanel>
-                        <field name="gender" icon="fa-users" select="multi" enable_counters="1"/>
-                    </searchpanel>
+                    <field name="gender" icon="fa-users" select="multi" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
