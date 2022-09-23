@@ -1,0 +1,3 @@
+id,name,active
+patient_tag_vvip,VVIP,True
+patient_tag_mrs,MRS,True

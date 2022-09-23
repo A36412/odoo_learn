@@ -8,7 +8,8 @@
             <tree decoration-success="state == 'done'"
                   decoration-info="state== 'draft'"
                   decoration-danger="state== 'cancel'"
-                  decoration-muted="state== 'in_consultation'" sample="1" multi_edit="1">
+                  decoration-muted="state== 'in_consultation'" sample="1"
+                  multi_edit="1"> <!-- Chỉnh theo màu hiện ở ngoài tree view theo các trạng thái  -->
                 <field name="patient_id"/>
                 <field name="appointment_time"/>
                 <field name="ref" optional="hide"/>
@@ -20,7 +21,7 @@
                        decoration-info="state== 'draft'"
                        decoration-danger="state== 'cancel'"
                        decoration-muted="state== 'in_consultation'"
-                       widget="badge"/>
+                       widget="badge"/> <!-- Các trạng thái của nội dung -->
             </tree>
         </field>
     </record>
@@ -52,15 +53,18 @@
             <form create="0">
                 <header>
                     <button name="action_in_consultation" class="oe_highlight" string="In consultation" type="object"
-                            states="draft" data-hotkey="c"/>
-                    <button name="action_done" string="Mark as Done" type="object" states="in_consultation" class="oe_highlight"
-                            data-hotkey="v"/>
+                            states="draft" data-hotkey="c"/>  <!-- Button action code python -->
+                    <button name="action_done" string="Mark as Done" type="object" states="in_consultation"
+                            class="oe_highlight"
+                            data-hotkey="v"/> <!-- Button action code python -->
 
-                    <!--<button name="%(action_cancel_appointment)d" string="Cancel" type="action" states="draft,in_consultation"
-                            data-hotkey="z"/>-->
-
-                    <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation"
-                            data-hotkey="z"/>
+                    <button name="%(action_cancel_appointment)d" string="Cancel" type="action"
+                            states="draft,in_consultation"
+                            context="{'default_appointment_id': active_id,'hide_appointment':1}"
+                            data-hotkey="z"/>  <!-- context(default_appointment_id) sẽ chọc thẳng vào appointment_id cá nhân mà không cần nhập-->
+                    <!-- context(hide_appointment) sẽ chạy một trường ẩn có thể xem  thêm ở cancel_appointment-->
+                    <!--                    <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation"-->
+                    <!--                            data-hotkey="z"/>-->
                     <button name="action_draft" string="Draft" type="object" states="cancel" data-hotkey="i"/>
 
                     <!--                    options="{'clickable': '1'}"-->
