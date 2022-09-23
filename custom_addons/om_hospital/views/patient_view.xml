@@ -8,7 +8,7 @@
             <tree>
                 <field name="name" string="Patient Name"/>
                 <field name="ref"/>
-                <field name="age" optional="hide"/>
+                <field name="age" />
                 <field name="gender"/>
             </tree>
         </field>
@@ -30,7 +30,7 @@
                         </group>
                         <group>
                             <field name="ref"/>
-                            <field name="gender"/>
+                            <field name="gender" invisible="context.get('hide_gender')"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
                             <field name="active" invisible="1"/>
                         </group>
@@ -61,7 +61,7 @@
                 <!--                <separator/>-->
                 <!--                <filter name="filter_kids" string="Kids" domain="[('age','&lt;=',5)]"/>-->
                 <separator/>
-                <filter name="filter_active" string="Active" domain="[('active','=',False)]"/>
+                <filter name="filter_active" string="Active" domain="[('active','=',False)]"/> <!-- Tạo filter -->
                 <group expand="0" string="Group By">
                     <filter string="Gender" name="group_by_gender" context="{'group_by':'gender'}"/>
                 </group>
