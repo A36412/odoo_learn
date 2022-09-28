@@ -23,4 +23,5 @@ class CancelAppointmentWizard(models.Model):
     def action_cancel(seft):
         if seft.appointment_id.booking_date == fields.date.today():
             raise ValidationError(_("This day can't be cancel because the same day"))
-        return
+        seft.appointment_id.state = 'cancel'
+        return #check ngày trước khi cho vào trạng thái cancel
