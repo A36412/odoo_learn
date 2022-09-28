@@ -18,12 +18,31 @@ class HospitalPatient(models.Model):
     appointment_id = fields.Many2one("hospital.appointment", string="Appointments")
     image = fields.Image(string="Image")
     tag_ids = fields.Many2many('patient.tag', string="Tag")
+    appointment_count = fields.Integer(string="Appointment_Count", compute="_compute_appointment_count", store=True)
+    appointment_ids = fields.One2many('hospital.appointment', 'patient_id', string="Appointments")
+    parent = fields.Char(string="Parent")
+    marital_status = fields.Selection([('married', 'Married'), ('single', 'Single')], string="Marital Status",
+                                      tracking=True)
+    partner_name = fields.Char(string="Partner Name")
+
+    @api.depends('appointment_ids')
+    def _compute_appointment_count(self):
+        for rec in self:
+            rec.appointment_count = self.env['hospital.appointment'].search_count(
+                [('patient_id', '=', rec.id)])  # đếm số lượng cuộc họp mà có patient_id = rec.id
 
     @api.constrains('date_of_birth')
     def _check_date_of_birth(self):
         for rec in self:
             if rec.date_of_birth and rec.date_of_birth > fields.Date.today():
                 raise ValidationError(_("This Birth not acceptable"))
+                # Check ngày sinh nếu ngày sinh lớn hơn thời gian hiện tại thì sẽ xảy ra lỗi
+
+    @api.ondelete(at_uninstall=False) # Kiểm tra trước khi xóa  Patient xem có còn appointment nào thuộc Patient đó
+    def _check_appointments(self):
+        for rec in self:
+            if rec.appointment_ids:
+                raise ValidationError(_("You can not delete the Patient with appointment"))
 
     @api.model
     def create(self, vals):
@@ -36,7 +55,7 @@ class HospitalPatient(models.Model):
             return super(HospitalPatient, self).create(vals)
 
     @api.depends('date_of_birth')
-    def _compute_age(self):
+    def _compute_age(self): #Đây là hàm tính toán ngày sinh
         for rec in self:
             today = date.today()
             if rec.date_of_birth:

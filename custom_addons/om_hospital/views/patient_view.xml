@@ -5,10 +5,10 @@
         <field name="name">hospital.patient.tree</field>
         <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree export_xlsx="0"> <!-- Cho phép xuất file exel -->
                 <field name="name" string="Patient Name"/>
                 <field name="ref"/>
-                <field name="age" />
+                <field name="age"/>
                 <field name="gender"/>
             </tree>
         </field>
@@ -21,18 +21,36 @@
             <form>
                 <sheet>
                     <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h2>
+                            <field name="ref" readonly="1"/>
+                        </h2>
+                        <h2>
+                            <label for = 'name' string="name"  class ="oe_edit_only"/>
+                            <field name="name"/>
+                        </h2>
+
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="date_of_birth"/>
                             <field name="age"/>
-                            <field name="appointment_id"/>
+                            <field name="appointment_count"/>
                         </group>
                         <group>
-                            <field name="ref"/>
                             <field name="gender" invisible="context.get('hide_gender')"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
                             <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Other Information" name="other_info">
+                        <group>
+                            <field name="parent"
+                                   attrs="{'invisible':[('age' ,'>', 18 )]}"/> <!-- xét điều kiện hiển thị cho trường parent-->
+                            <field name="marital_status" attrs="{'invisible':[('age' ,'&lt;', 18 )]}"/>
+                            <field name="partner_name"
+                                   attrs="{'readonly':[('marital_status' ,'!=', 'married' )],'required':[('marital_status', '=', 'married')]}"/>
+                            <!-- readonly khiến cho trường đó chỉ có thể nhìn chứ không thể nhập -->
                         </group>
                     </group>
                 </sheet>
@@ -52,7 +70,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name" string="Patient Name" filter_domain="['|','|',
-                        ('name', 'ilike', self), ('ref', 'ilike', self),('gender', 'ilike', self)]"/>
+                        ('name', 'ilike', self), ('ref', 'ilike', self),('gender', 'ilike', self)]"/> <!-- Tìm kiếm -->
                 <field name="ref"/>
                 <field name="age"/>
                 <field name="gender"/>
@@ -63,7 +81,7 @@
                 <separator/>
                 <filter name="filter_active" string="Active" domain="[('active','=',False)]"/> <!-- Tạo filter -->
                 <group expand="0" string="Group By">
-                    <filter string="Gender" name="group_by_gender" context="{'group_by':'gender'}"/>
+                    <filter string="Gender" name="group_by_gender" context="{'group_by':'gender'}"/> <!--  Khiển thị số lượng phần tử góc trái theo giới tính -->
                 </group>
                 <searchpanel>
                     <field name="gender" icon="fa-users" select="multi" enable_counters="1"/>

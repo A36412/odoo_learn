@@ -6,10 +6,11 @@
         <field name="model">hospital.appointment</field>
         <field name="arch" type="xml">
             <tree decoration-success="state == 'done'"
-                  decoration-info="state== 'draft'"
-                  decoration-danger="state== 'cancel'"
-                  decoration-muted="state== 'in_consultation'" sample="1"
+                  decoration-danger="state== 'cancel'" sample="1"
                   multi_edit="1"> <!-- Chỉnh theo màu hiện ở ngoài tree view theo các trạng thái  -->
+                <header>
+                    <button name="action_in_consultation" string="In consultation" type="object"/>
+                </header> <!-- Thêm nút button vào tree view -->
                 <field name="patient_id"/>
                 <field name="appointment_time"/>
                 <field name="ref" optional="hide"/>
@@ -22,6 +23,14 @@
                        decoration-danger="state== 'cancel'"
                        decoration-muted="state== 'in_consultation'"
                        widget="badge"/> <!-- Các trạng thái của nội dung -->
+                <button name="action_done" type="object" states="in_consultation"
+                        attrs="{'invisible':[('state','!=','in_consultation')]}" class="fa fa-check btn-success"
+                /> <!-- Thêm các button vào phần tree view  và sẽ ẩn khi mà các state khác in_Consultation -->
+                <button name="%(action_cancel_appointment)d" type="action"
+                        attrs="{'invisible':[('state','not in',('in_consultation','draft'))]}"
+                        context="{'default_appointment_id': active_id,'hide_appointment':1}"
+                        class="fa fa-times btn-danger"
+                /><!-- Thêm các button vào phần tree view  và sẽ ẩn khi mà các state  khác draft và in_Consultation -->
             </tree>
         </field>
     </record>
@@ -42,7 +51,7 @@
                         </div>
                     </div>
                 </templates>
-            </activity>
+            </activity><!-- Activity view -->
         </field>
     </record>
 
@@ -50,7 +59,7 @@
         <field name="name">hospital.appointment.form</field>
         <field name="model">hospital.appointment</field>
         <field name="arch" type="xml">
-            <form create="0">
+            <form create="0"> <!-- create =0 sẽ làm cho nút create ở form biến mất -->
                 <header>
                     <button name="action_in_consultation" class="oe_highlight" string="In consultation" type="object"
                             states="draft" data-hotkey="c"/>  <!-- Button action code python -->
@@ -96,7 +105,7 @@
                             <button name="%(om_hospital.action_hospital_patient)d" string="Action Button" type="action"
                                     confirm="Are you sure?" help="Click this button you will go to patient"
                                     groups="base.group_no_one"
-                                    class="oe_highlight"/>
+                                    class="oe_highlight"/> <!-- phần name sẽ đi thằng vào om_hospital.action_hospital_patient -->
                         </group>
                     </group>
 
@@ -104,10 +113,11 @@
                         <page string="Prescription" name="prescription">
                             <field name="prescription" placeholder="Enter the prescription"
                                    options="{'collaborative': True, 'resizable': True, 'codeview':True}"/>
+                            <!-- Các tính năng có trong html vd như code view có thể thấy code html thuần-->
                         </page>
                         <page string="Pharmacy" name="pharmacy">
                             <field name="pharmacy_lines_ids">
-                                <tree editable="top">
+                                <tree editable="top"> <!-- Phần tử mới sẽ hiện ở đầu -->
                                     <field name="product_id"/>
                                     <field name="price_unit"
                                            attrs="{'column_invisible': [('parent.hide_sales_price', '=', True)]}"/>
