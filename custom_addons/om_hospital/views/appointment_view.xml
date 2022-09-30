@@ -31,6 +31,10 @@
                         context="{'default_appointment_id': active_id,'hide_appointment':1}"
                         class="fa fa-times btn-danger"
                 /><!-- Thêm các button vào phần tree view  và sẽ ẩn khi mà các state  khác draft và in_Consultation -->
+                <groupby name="patient_id">
+                    <button name="action_test" string ="Click me" type="object" class="oe_highlight"/>
+                    <button name="edit" string ="edit" type="edit" />
+                </groupby> <!-- Add button vào group by -->
             </tree>
         </field>
     </record>
