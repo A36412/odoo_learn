@@ -13,7 +13,8 @@ class HospitalPatient(models.Model):
     name = fields.Char(string='Name', tracking=True)
     ref = fields.Char(string='Reference', tracking=True)
     date_of_birth = fields.Date(string='Date Of Birth')
-    age = fields.Integer(string="Age", compute="_compute_age", inverse="_inverse_compute_age", tracking=True)
+    age = fields.Integer(string="Age", compute="_compute_age", inverse="_inverse_compute_age", search="_search_age",
+                         tracking=True)
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], string="Gender", tracking=True)
     active = fields.Boolean(string="Active", default=True, tracking=True)
     appointment_id = fields.Many2one("hospital.appointment", string="Appointments")
@@ -53,7 +54,7 @@ class HospitalPatient(models.Model):
     def write(self, vals):
         if not self.ref and not vals.get('ref'):
             vals['ref'] = self.env['ir.sequence'].next_by_code('hospital.patient')
-        return super(HospitalPatient, self).write(vals)
+        return super(HospitalPatient, self).write(vals)  # Khi sửa check nếu ref khong co thì nó sẽ sinh ra ref tự động
 
     @api.depends('date_of_birth')
     def _compute_age(self):  # Đây là hàm tính toán ngày sinh
@@ -69,6 +70,13 @@ class HospitalPatient(models.Model):
         today = date.today()
         for rec in self:
             rec.date_of_birth = today - relativedelta.relativedelta(years=rec.age)
+
+    def _search_age(self, operator, value):
+        date_of_birth = date.today() - relativedelta.relativedelta(years=value)
+        start_of_year = date_of_birth.replace(day=1, month=1)
+        end_of_year = date_of_birth.replace(day=31, month=12)
+        return [('date_of_birth', '>=', start_of_year), ('date_of_birth', '<=', end_of_year)]
+        # Hàm tìm kiếm age vì compyte không lưu vào database => search không thể tìm => đây là trường dùng để tìm trường không lưu trữ
 
     def name_get(self):
         return [(record.id, "[%s] %s" % (record.ref, record.name)) for record in self]
