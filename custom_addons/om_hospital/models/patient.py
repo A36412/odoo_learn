@@ -79,7 +79,9 @@ class HospitalPatient(models.Model):
         # Hàm tìm kiếm age vì compyte không lưu vào database => search không thể tìm => đây là trường dùng để tìm trường không lưu trữ
 
     def name_get(self):
-        return [(record.id, "[%s] %s" % (record.ref, record.name)) for record in self]
+        return [(record.id, "[%s] %s" % (record.ref, record.name)) for record in
+                self]  # %s là vị trí sẽ hiện trong string việc record.id đứng ở đầu
+        # là do nó sẽ tìm kếm những phần tử có id đó rồi thềm ref và name vào string theo %s
 
     def action_test(self):
         print("Haiz")

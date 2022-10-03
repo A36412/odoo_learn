@@ -1,6 +1,8 @@
 import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from datetime import date
+from dateutil import relativedelta
 
 
 class CancelAppointmentWizard(models.Model):
@@ -16,12 +18,17 @@ class CancelAppointmentWizard(models.Model):
         return res
 
     appointment_id = fields.Many2one('hospital.appointment', string="Appointment Id",
-                                     domain=[('state', '=', 'draft'), ('priority', 'in', ('0', '1', False))]) #domain sẽ tìm các phần tử có state là draft
+                                     domain=[('state', '=', 'draft'), ('priority', 'in', (
+                                     '0', '1', False))])  # domain sẽ tìm các phần tử có state là draft
     reason = fields.Text(string="Reason")
     date_cancel = fields.Date(string="Cancellation Date")
 
-    def action_cancel(seft):
-        if seft.appointment_id.booking_date == fields.date.today():
+    def action_cancel(self):
+
+        cancel_day = self.env['ir.config_parameter'].get_param('om_hospital.cancel_Days')
+        allowed_date = self.appointment_id.booking_date - relativedelta.relativedelta(days=int(cancel_day))
+        print("allow =", allowed_date)
+        if allowed_date < date.today():
             raise ValidationError(_("This day can't be cancel because the same day"))
-        seft.appointment_id.state = 'cancel'
-        return #check ngày trước khi cho vào trạng thái cancel
+        self.appointment_id.state = 'cancel'
+        return  # check ngày trước khi cho vào trạng thái cancel
