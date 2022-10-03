@@ -7,9 +7,9 @@
         <field name="arch" type="xml">
             <tree export_xlsx="0"> <!-- Cho phép xuất file exel -->
                 <field name="name" string="Patient Name"/>
-                <field name="ref"/>
-                <field name="age"/>
-                <field name="gender"/>
+                <field name="ref" />
+                <field name="age" />
+                <field name="gender" />
             </tree>
         </field>
     </record>
@@ -38,7 +38,7 @@
                             <field name="appointment_count"/>
                         </group>
                         <group>
-                            <field name="gender" invisible="context.get('hide_gender')"/>
+                            <field name="gender" invisible="context.get('hide_gender')" widget ="radio"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
                             <field name="active" invisible="1"/>
                         </group>
@@ -64,7 +64,7 @@
         </field>
     </record>
 
-    <record id="view_hospital_patient_search" model="ir.ui.view">
+    <record id="view_hospital_patient_search" model="ir.ui.view"> <!-- Trường search sẽ tìm kiếm trên postesql -->
         <field name="name">hospital.patient.search</field>
         <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
