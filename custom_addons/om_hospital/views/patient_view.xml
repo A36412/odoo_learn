@@ -8,8 +8,10 @@
             <tree export_xlsx="0"> <!-- Cho phép xuất file exel -->
                 <field name="name" string="Patient Name"/>
                 <field name="ref" />
-                <field name="age" />
+                <field name="age" avg="Average Age"/>
+                <field name="appointment_count" sum="Total Appointment"/>
                 <field name="gender" />
+                <field name="tag_ids" widget="many2many_tag" options="{'color_field': 'color'}"/>
             </tree>
         </field>
     </record>
