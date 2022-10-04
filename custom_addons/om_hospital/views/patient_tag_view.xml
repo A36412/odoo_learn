@@ -1,5 +1,5 @@
 <odoo>
-    <record id="view_hospital_patient_tree" model="ir.ui.view">
+    <record id="view_hospital_patient_tag_tree" model="ir.ui.view">
         <field name="name">patient.tag.tree</field>
         <field name="model">patient.tag</field>
         <field name="arch" type="xml">

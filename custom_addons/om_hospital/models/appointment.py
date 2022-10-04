@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 
 class HospitalAppointment(models.Model):
     _name = "hospital.appointment"
-    _inherit = ['mail.thread', 'mail.activity.mixin'] #Phần kế thừa các model khác
+    _inherit = ['mail.thread', 'mail.activity.mixin']  # Phần kế thừa các model khác
     _description = "hospital Appointment"
     _rec_name = "patient_id"
 
@@ -31,6 +31,7 @@ class HospitalAppointment(models.Model):
     # khi dùng One2many bạn phải có một liên kết Many2one ở class mà bạn muốn liên kết cấu trúc cơ bản của một One2many
     # (tên class, Many2one, string)
     hide_sales_price = fields.Boolean(string="Hide Sales Price")
+    operator_id = fields.Many2one('hospital.operation', string="Operation")
 
     @api.model
     def create(self, vals):
@@ -46,7 +47,7 @@ class HospitalAppointment(models.Model):
     def onchange_patient_id(self):
         self.ref = self.patient_id.ref
 
-    def action_test(self): #hiệu ứng Mặt chúc mừng
+    def action_test(self):  # hiệu ứng Mặt chúc mừng
         return {
             'effect': {
                 'fadeout': 'slow',

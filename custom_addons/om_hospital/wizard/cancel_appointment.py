@@ -19,7 +19,7 @@ class CancelAppointmentWizard(models.Model):
 
     appointment_id = fields.Many2one('hospital.appointment', string="Appointment Id",
                                      domain=[('state', '=', 'draft'), ('priority', 'in', (
-                                     '0', '1', False))])  # domain sẽ tìm các phần tử có state là draft
+                                         '0', '1', False))])  # domain sẽ tìm các phần tử có state là draft
     reason = fields.Text(string="Reason")
     date_cancel = fields.Date(string="Cancellation Date")
 
@@ -31,4 +31,7 @@ class CancelAppointmentWizard(models.Model):
         if allowed_date < date.today():
             raise ValidationError(_("This day can't be cancel because the same day"))
         self.appointment_id.state = 'cancel'
-        return  # check ngày trước khi cho vào trạng thái cancel
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload'
+        }  # check ngày trước khi cho vào trạng thái cancel
