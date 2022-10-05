@@ -8,13 +8,18 @@
             <form>
                 <group>
                     <field name="model_id"/>
-                    <field name="code" widget="ace" options="{'mode':'python'}"/>
+                    <field name="code" widget="ace" options="{'mode':'xml'}"/>
                 </group>
                 <group>
-                    <button name ="action_execute" string="Execute" type = "object" class="btn-primary" data-hotkey ="q"/>
+                    <div>
+                        <button name="action_execute" string="Execute" type="object" class="fa fa-check oe_highlight"
+                                data-hotkey="q"/>
+<!--                        <button name="action_clear" string="Clear" type="object" class="fa fa-refresh"
+                                data-hotkey="c"/>-->
+                    </div>
                 </group>
                 <group>
-                    <field name="result"/>
+                    <field name="result" readonly="1"/>
                 </group>
                 <footer>
                 </footer>
@@ -31,6 +36,6 @@
     </record>
 
     <menuitem id="menu_technical" name="Technical" sequence="110" parent="menu_hospital_root">
-            <menuitem id ="menu_playground2" name="Play Ground" action="action_playground" sequence="10"/>
-        </menuitem>
+        <menuitem id="menu_playground2" name="Play Ground" action="action_playground" sequence="10"/>
+    </menuitem>
 </odoo>

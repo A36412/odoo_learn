@@ -28,8 +28,8 @@ class CancelAppointmentWizard(models.Model):
         cancel_day = self.env['ir.config_parameter'].get_param('om_hospital.cancel_Days')
         allowed_date = self.appointment_id.booking_date - relativedelta.relativedelta(days=int(cancel_day))
         print("allow =", allowed_date)
-        if allowed_date < date.today():
-            raise ValidationError(_("This day can't be cancel because the same day"))
+        if allowed_date == date.today() or self.appointment_id.state == 'in_consultation':
+            raise ValidationError(_("This day can't be cancel because the same day or in consultation"))
         self.appointment_id.state = 'cancel'
         return {
             'type': 'ir.actions.client',
