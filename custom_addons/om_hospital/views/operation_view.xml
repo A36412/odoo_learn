@@ -18,8 +18,11 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="operation_name"/>
-                        <field name="doctor_id"/>
+                        <group>
+                            <field name="operation_name"/>
+                            <field name="doctor_id"/>
+                            <field name="reference_record"/>
+                        </group>
                     </group>
                 </sheet>
                 <!-- Chatter -->

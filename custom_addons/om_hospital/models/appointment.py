@@ -32,6 +32,8 @@ class HospitalAppointment(models.Model):
     # (tên class, Many2one, string)
     hide_sales_price = fields.Boolean(string="Hide Sales Price")
     operator_id = fields.Many2one('hospital.operation', string="Operation")
+    progress = fields.Integer(string="Progress", compute="_compute_progress")
+    duration = fields.Float(string="Duration")
 
     @api.model
     def create(self, vals):
@@ -73,6 +75,18 @@ class HospitalAppointment(models.Model):
         for rec in self:
             rec.state = "draft"
 
+    @api.depends('state')
+    def _compute_progress(self):
+        for rec in self:
+            if rec.state == "draft":
+                progress = 25
+            elif rec.state == "in_consultation":
+                progress = 50
+            elif rec.state == "done":
+                progress = 100
+            else:
+                progress = 0
+            rec.progress = progress
 
 class AppointmentPharmacyLines(models.Model):
     _name = "appointment.pharmacy.lines"

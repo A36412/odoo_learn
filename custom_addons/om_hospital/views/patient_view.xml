@@ -7,10 +7,10 @@
         <field name="arch" type="xml">
             <tree export_xlsx="0"> <!-- Cho phép xuất file exel -->
                 <field name="name" string="Patient Name"/>
-                <field name="ref" />
-                <field name="age" avg="Average Age"/>
-                <field name="appointment_count" sum="Total Appointment"/>
-                <field name="gender" />
+                <field name="ref"/>
+                <field name="age" avg="Average Age"/>  <!-- avg tính trung bình -->
+                <field name="appointment_count" sum="Total Appointment"/> <!-- sum tính tổng -->
+                <field name="gender"/>
                 <field name="tag_ids" widget="many2many_tag" options="{'color_field': 'color'}"/>
             </tree>
         </field>
@@ -22,13 +22,22 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="alert alert-info text-center o_form_header" role="alert" attrs="{'invisible': [('is_birthday','=',False)]}"> <!-- Show alter trong form -->
+                        <a class="close" data-dismiss="alert" href="#">x</a>
+                        <div>
+                            <strong>Today is Birthday !</strong>
+                        </div>
+                        <div>Wish
+                            <field name="name" required="0" readonly="1"/>
+                        </div>
+                    </div>
                     <field name="image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <h2>
                             <field name="ref" readonly="1"/>
                         </h2>
                         <h2>
-                            <label for = 'name' string="name"  class ="oe_edit_only"/>
+                            <label for='name' string="name" class="oe_edit_only"/>
                             <field name="name"/>
                         </h2>
 
@@ -40,9 +49,11 @@
                             <field name="appointment_count"/>
                         </group>
                         <group>
-                            <field name="gender" invisible="context.get('hide_gender')" widget ="radio"/>
+                            <field name="gender" invisible="context.get('hide_gender')" widget="radio"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
                             <field name="active" invisible="1"/>
+                            <field name="appointment_count"/>
+                            <field name="is_birthday" invisible="1"/>
                         </group>
                     </group>
                     <group string="Other Information" name="other_info">
@@ -53,6 +64,11 @@
                             <field name="partner_name"
                                    attrs="{'readonly':[('marital_status' ,'!=', 'married' )],'required':[('marital_status', '=', 'married')]}"/>
                             <!-- readonly khiến cho trường đó chỉ có thể nhìn chứ không thể nhập -->
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"  />
+                            <field name="email"  widget="email"/>
+                            <field name="website" widget="url"/>
                         </group>
                     </group>
                 </sheet>
@@ -83,7 +99,8 @@
                 <separator/>
                 <filter name="filter_active" string="Active" domain="[('active','=',False)]"/> <!-- Tạo filter -->
                 <group expand="0" string="Group By">
-                    <filter string="Gender" name="group_by_gender" context="{'group_by':'gender'}"/> <!--  Khiển thị số lượng phần tử góc trái theo giới tính -->
+                    <filter string="Gender" name="group_by_gender"
+                            context="{'group_by':'gender'}"/> <!--  Khiển thị số lượng phần tử góc trái theo giới tính -->
                 </group>
                 <searchpanel>
                     <field name="gender" icon="fa-users" select="multi" enable_counters="1"/>

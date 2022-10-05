@@ -35,7 +35,35 @@
                     <button name="action_test" string="Click me" type="object" class="oe_highlight"/>
                     <button name="edit" string="edit" type="edit"/>
                 </groupby> <!-- Add button vào group by -->
+                <field name="progress" widget="progressbar"/>
             </tree>
+        </field>
+    </record>
+
+     <record id="view_hospital_appointment_calendar" model="ir.ui.view">
+        <field name="name">hospital.appointment.calender</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <calendar string="Appointment" date_start="booking_date" mode="month" date_delay="duration" quick_add="False"
+                      color="state" hide_time="True" form_view_id="%(om_hospital.view_hospital_appointment_formD)d"> <!-- Quickadd sẽ loại bỏ bảng nhỏ khi kích vào lịch mà chuyển đến form luôn , day_delay giúp bạn kéo cột -->
+                <field name="patient_id" filters="1" avatar_field="image"/>
+                <field name="state" invisible="1" filters="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_mark_as_done" model="ir.actions.server">
+        <field name="name">Mark As Done</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hospital_appointment"/>
+        <field name="binding_model_id" ref="model_hospital_appointment"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        <field name="code">
+            for record in records:
+                if record.state == "in_consultation":
+                    record.action_done()
         </field>
     </record>
 
@@ -98,6 +126,7 @@
                             <field name="gender"/>
                             <field name="doctor_id" widget="many2one_avatar_user"/>
                             <field name="booking_date"/>
+                            <field name="duration"/>
                             <field name="operator_id"/>
                         </group>
                         <group>
@@ -115,6 +144,9 @@
                     </group>
 
                     <notebook>
+                        <page string="Progress" name="progress">
+                            <field name="progress" widget="percentpie" options="{'style':'width:120px;height:120px;'}"/>
+                        </page>
                         <page string="Prescription" name="prescription">
                             <field name="prescription" placeholder="Enter the prescription"
                                    options="{'collaborative': True, 'resizable': True, 'codeview':True}"/>
@@ -164,7 +196,7 @@
         <field name="name">Appointment</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hospital.appointment</field>
-        <field name="view_mode">tree,form,activity</field>
+        <field name="view_mode">tree,form,activity,calendar</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
