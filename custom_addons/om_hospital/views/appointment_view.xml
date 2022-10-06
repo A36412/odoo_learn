@@ -45,7 +45,7 @@
         <field name="model">hospital.appointment</field>
         <field name="arch" type="xml">
             <calendar string="Appointment" date_start="booking_date" mode="month" date_delay="duration" quick_add="False"
-                      color="state" hide_time="True" form_view_id="%(om_hospital.view_hospital_appointment_formD)d"> <!-- Quickadd sẽ loại bỏ bảng nhỏ khi kích vào lịch mà chuyển đến form luôn , day_delay giúp bạn kéo cột -->
+                      color="state" hide_time="True" form_view_id="%(om_hospital.view_hospital_appointment_form)d"> <!-- Quickadd sẽ loại bỏ bảng nhỏ khi kích vào lịch mà chuyển đến form luôn , day_delay giúp bạn kéo cột -->
                 <field name="patient_id" filters="1" avatar_field="image"/>
                 <field name="state" invisible="1" filters="1"/>
             </calendar>
@@ -159,6 +159,8 @@
                                     <field name="price_unit"
                                            attrs="{'column_invisible': [('parent.hide_sales_price', '=', True)]}"/>
                                     <field name="qty"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="price_subtotal"/>
                                 </tree>
                                 <form>
                                     <group>
